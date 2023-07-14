@@ -19,6 +19,9 @@ client.on("qr", (qr) => {
 client.on("ready", () => {
   cargado = true;
   console.log("Client is ready!");
+  setInterval(() => {
+    console.log("Reset");
+  }, 10000);
 });
 
 client.on("message", async (message) => {
@@ -120,10 +123,6 @@ client.on("message", async (message) => {
     );
   }
 });
-
-setInterval(() => {
-  console.log("Reset");
-}, 10000);
 
 client.initialize();
 

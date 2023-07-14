@@ -21,7 +21,7 @@ client.on("ready", () => {
   console.log("Client is ready!");
   setInterval(() => {
     console.log("Reset");
-  }, 60000);
+  }, 600000);
 });
 
 client.on("message", async (message) => {

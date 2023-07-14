@@ -3,6 +3,7 @@ const qrcode = require("qrcode-terminal");
 const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 const fs = require('fs');
 const mime = require('mime-types');
+const express = require("express");
 
 // CLIENTE DE WHATSAPP BOT
 const client = new Client({
@@ -121,3 +122,14 @@ client.on("message", async (message) => {
 });
 
 client.initialize();
+
+const app = express()
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.json({Cargado: true});
+})
+
+app.listen(PORT, () => {
+  console.log(`Escuchando en el puerto ${PORT}`);
+})

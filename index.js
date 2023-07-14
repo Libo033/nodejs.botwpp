@@ -5,6 +5,8 @@ const fs = require('fs');
 const mime = require('mime-types');
 const express = require("express");
 
+let cargado = false;
+
 // CLIENTE DE WHATSAPP BOT
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -15,6 +17,7 @@ client.on("qr", (qr) => {
 });
 
 client.on("ready", () => {
+  cargado = true;
   console.log("Client is ready!");
 });
 
@@ -127,7 +130,7 @@ const app = express()
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.json({Cargado: true});
+  res.json({Cargado: cargado});
 })
 
 app.listen(PORT, () => {

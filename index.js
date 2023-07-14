@@ -1,8 +1,8 @@
 const { default: axios } = require("axios");
 const qrcode = require("qrcode-terminal");
 const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
-const fs = require('fs');
-const mime = require('mime-types');
+const fs = require("fs");
+const mime = require("mime-types");
 const express = require("express");
 
 let cargado = false;
@@ -24,20 +24,17 @@ client.on("ready", () => {
 client.on("message", async (message) => {
   if (message.body === "!ping") {
     message.reply("pong");
-  }
-  if (message.body === "!help") {
+  } else if (message.body === "!help") {
     message.reply(
       "BOT opciones:\n!usd - Devuelve el valor del Dolar Blue\n!usd.1234 - Convierte a pesos\n!euro - Devuelve el valor del Euro Blue\n!euro.1234 - Convierte a pesos\n!pesos.1234 - Convierte los pesos en Dolar y Euro"
     );
-  }
-  if (message.body === "!usd") {
+  } else if (message.body === "!usd") {
     const { data } = await axios.get(
       "https://mercados.ambito.com/dolar/informal/variacion"
     );
 
     message.reply(data.venta);
-  }
-  if (message.body.slice(0, 5) === "!usd.") {
+  } else if (message.body.slice(0, 5) === "!usd.") {
     let result = parseFloat(message.body.slice(5, message.body.length));
     const { data } = await axios.get(
       "https://mercados.ambito.com/dolar/informal/variacion"
@@ -48,15 +45,13 @@ client.on("message", async (message) => {
         parseFloat(result) * parseFloat(data.venta)
       ).toFixed()}`
     );
-  }
-  if (message.body === "!euro") {
+  } else if (message.body === "!euro") {
     const { data } = await axios.get(
       "https://mercados.ambito.com/euro/informal/variacion"
     );
 
     message.reply(data.venta);
-  }
-  if (message.body.slice(0, 6) === "!euro.") {
+  } else if (message.body.slice(0, 6) === "!euro.") {
     let result = message.body.slice(6, message.body.length);
     const { data } = await axios.get(
       "https://mercados.ambito.com/euro/informal/variacion"
@@ -67,8 +62,7 @@ client.on("message", async (message) => {
         result * data.venta
       ).toFixed()}`
     );
-  }
-  if (message.body.slice(0, 7) === "!pesos.") {
+  } else if (message.body.slice(0, 7) === "!pesos.") {
     let result = parseFloat(message.body.slice(7, message.body.length));
     const { data: euro } = await axios.get(
       "https://mercados.ambito.com/euro/informal/variacion"
@@ -84,8 +78,7 @@ client.on("message", async (message) => {
         result / parseFloat(dolar.venta)
       ).toFixed()}`
     );
-  }
-  if (message.body === "!sticker") {
+  } else if (message.body === "!sticker") {
     if (message.hasMedia) {
       message.downloadMedia().then((media) => {
         if (media) {
@@ -102,7 +95,7 @@ client.on("message", async (message) => {
           try {
             fs.writeFileSync(fullFilename, media.data, { encoding: "base64" });
 
-            MessageMedia.fromFilePath(filePath = fullFilename)
+            MessageMedia.fromFilePath((filePath = fullFilename));
             client.sendMessage(
               message.from,
               new MessageMedia(media.mimetype, media.data, filename),
@@ -121,18 +114,26 @@ client.on("message", async (message) => {
     } else {
       message.reply(`Manda una imagen con *!sticker*`);
     }
+  } else {
+    message.reply(
+      "BOT opciones:\n!usd - Devuelve el valor del Dolar Blue\n!usd.1234 - Convierte a pesos\n!euro - Devuelve el valor del Euro Blue\n!euro.1234 - Convierte a pesos\n!pesos.1234 - Convierte los pesos en Dolar y Euro"
+    );
   }
 });
 
+setInterval(() => {
+  console.log("Reset");
+}, 10000);
+
 client.initialize();
 
-const app = express()
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.json({Cargado: cargado});
-})
+app.get("/", (req, res) => {
+  res.json({ Cargado: cargado });
+});
 
 app.listen(PORT, () => {
   console.log(`Escuchando en el puerto ${PORT}`);
-})
+});
